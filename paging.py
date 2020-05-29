@@ -9,25 +9,18 @@ import random
 
 def FIFO(size,pages):
     pFaults=0
-    stack=[]
+    queue=[]
     for page in pages:
-        if(len(stack)!=size):
-            stack.append(page)
+        if(len(queue)!=size):
+            queue.append(page)
             pFaults=pFaults+1
         else:
-            if(page in stack):
+            if(page in queue):
                 continue
             else:
-                for i in range(size):
-
-                    if(i==size-1):
-                        stack.pop()
-                        stack.append(page)
-                        
-                    else:
-                        stack[i]=stack[i+1]
                 
-                #stack.append(page)
+                queue.pop(0)
+                queue.append(page)
                 pFaults=pFaults+1
        
 
