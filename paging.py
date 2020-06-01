@@ -12,13 +12,16 @@ def FIFO(size,pages):
     queue=[]
     for page in pages:
         if(len(queue)!=size):
-            queue.append(page)
-            pFaults=pFaults+1
+            if(page in queue):
+                continue
+            else:
+                queue.append(page)
+                pFaults+=1
         else:
             if(page not in queue):
                 queue.pop(0)
                 queue.append(page)
-                pFaults=pFaults+1
+                pFaults+=1
            
        
 
@@ -28,10 +31,12 @@ def OPT(size,pages):
     pFault=0
     queue=[]
     for page in range(len(pages)):
-
         if(len(queue)!=size):
-            queue.append(pages[page])
-            pFault=pFault+1
+            if(pages[page] in queue):
+                continue
+            else:
+                queue.append(pages[page])
+                pFault=pFault+1
         else:
             if(pages[page] not in queue):
                 matches=[]
@@ -69,54 +74,46 @@ def LRU(size,pages):
     pFault=0
     queue=[]
     for page in range(len(pages)):
-        dict={}
-        for ele in range(0,page):
-            if pages[ele] not in dict.keys():
-                dict[pages[ele]]=1
-            else:
-                dict[pages[ele]]+=1
-        if(len(queue)!=size):
-            queue.append(pages[page])
-            pFault=pFault+1
-        else:
-            if(pages[page] in queue):
-                continue
-            else:
-                max=100000
-                replace=""
-                for ay in queue:
-                    if ay in dict.keys():
-                        if dict[ay]<=max:
-                            max=dict[ay]
-                            replace=ay
-                queue[queue.index(replace)]=pages[page]
-                pFault+=1
-
-
-                
-
-                    
-            
         
+        if(len(queue)!=size):
+            if(pages[page] in queue):
+                
+                queue.remove(pages[page])
+                queue.append(pages[page])
+            else:
+                queue.append(pages[page])
+                pFault=pFault+1
+        else:
+            if(pages[page] not in queue):
+                queue.pop(0)
+                queue.append(pages[page])
+                
+                pFault=pFault+1
+            else:
+                queue.remove(pages[page])
 
+                queue.append(pages[page])
+                
     return pFault
 
 def main():
     size = int(sys.argv[1])
+    length=int(sys.argv[2])
     if((size<1) or (size>7)):
         print("Your frame size should be an integer between 1 and 7")
         exit()
     pages=""
-    for x in range(9):
-        pages=pages+str(random.randint(0,9))
-    pages="2748064263683623842273793235"
+    for x in range(length):
+       pages=pages+str(random.randint(0,9))
+
+    print("random pages that are going to be swapped in and out",pages)
     print ("FIFO", FIFO(size,pages), "page faults.")
     print ("LRU", LRU(size,pages), "page faults.")
     print ("OPT", OPT(size,pages), "page faults.")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print ("Usage: python paging.py [number of pages]")
+    if len(sys.argv) != 3:
+        print ("Usage: python paging.py [number of frames in memory [1,7]] [number of pages in virtual memory to be swapped in]")
     else:
         main()
