@@ -1,0 +1,10 @@
+all method of LRU,OPT and FIFO have been implemented in the paging.py file
+
+The program must take in 2 arguments
+1st Argument: This is the framze size of the memory [1-7]. Has to be an integer between 1 and 7
+2nd Argument: This is the number of pages that will be randomly generated
+
+example of execution:
+    python3 paging.py 3 20
+
+    This will run the paging program with a frame size of 3 and 20 randomly generated pages with values from 1-9 
